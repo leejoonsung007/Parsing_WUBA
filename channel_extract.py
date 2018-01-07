@@ -20,13 +20,11 @@ def get_channel_urls(url):
     links = soup.select('ul.ym-submnu > li > b > a')
     for link in links:
         page_url = url_host + link.get('href')
-        print(page_url)
 
 get_channel_urls(start_url)
 
 channel_list = '''
     http://bj.58.com/shouji/
-    http://bj.58.com/tongxunyw/
     http://bj.58.com/danche/
     http://bj.58.com/diandongche/
     http://bj.58.com/fzixingche/
