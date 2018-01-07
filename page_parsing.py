@@ -3,7 +3,7 @@ import requests
 import time
 import pymongo
 
-# app.mongo = MongoClient(host='0.0.0.0',port=27017,connect=False)
+
 client = pymongo.MongoClient('localhost',27017,connect = False)
 ceshi = client['ceshi']
 url_list = ceshi['url_list']
@@ -19,7 +19,7 @@ links_list = []
 all_links = []
 
 def get_links_from(channel, pages, who_sells=0):
-    #http://bj.58.com/diannao/0/pn2/
+    #creat links like http://bj.58.com/diannao/0/pn2/
     list_view = '{}{}/pn{}/'.format(channel,str(who_sells),str(pages))
     wb_data = requests.get(list_view)
     time.sleep(1)
@@ -27,12 +27,14 @@ def get_links_from(channel, pages, who_sells=0):
 
     #check whether the page has sales information
     if soup.find('td','t'):
-
+        # check the items are from 58 store or zhuanzhuan
+        # if ignore one of them, lots of information will lose
         if soup.select('td.t.t_b > a'):
             for link in soup.select('td.t.t_b > a'):
                 item_link = link.get('href')
                 links_list.append(item_link)
                 url_list.insert_one({'url': item_link})
+                
         if soup.select("td.t a.t"):
             for zhuanzhuan_link in soup.select("td.t a.t"):
                 zhuanzhuan_item_link = zhuanzhuan_link.get('href')
@@ -70,6 +72,8 @@ def get_item_info(url):
             pass
 
     try:
+        # check whether page is from 58 store or zhuanzhuan
+        # key point: find their unique feature 
         check_zhuanzhuan = soup.select('div')
         for y in range(0, len(check_zhuanzhuan)):
             if check_zhuanzhuan[y].text == '58二手全新升级，新品牌，新服务':
@@ -89,7 +93,7 @@ def get_item_info(url):
                 item_info.insert_one({'title':title,'price':price,'area':area})
                 print({'title':title,'price':price,'area':area})
     except:
-        print("**************广告***************")
+        print("**************advertisement***************")
         pass
 
 # for single_link in sort_links_list:
@@ -102,8 +106,8 @@ def get_item_info(url):
 # get_item_info('http://bj.58.com/diannao/32555626200502x.shtml')
 # get_item_info('http://bj.58.com/diannao/32623493069740x.shtml')
 # get_item_info('http://bj.58.com/diannao/32656067570495x.shtml')
-# get_item_info('http://bj.58.com/diannao/32103957237948x.shtml') #广告
-# get_item_info('http://bj.58.com/huishou/31384237015851x.shtml') #广告
+# get_item_info('http://bj.58.com/diannao/32103957237948x.shtml') # advertisement
+# get_item_info('http://bj.58.com/huishou/31384237015851x.shtml') # advertisement
 # url = 'http://404.58.com/404.html?from=bj.58.com/shouji/246059546211114x.shtml'
 # wb_data = requests.get(url)
 # soup = BeautifulSoup(wb_data.text, 'lxml')
