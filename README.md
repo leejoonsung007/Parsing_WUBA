@@ -3,7 +3,7 @@
 This program aim to parse http://bj.58.com/sale.shtml
 
 # channel_extract.py
-Extract the links of each channel
+Extract the links of each channels
 
 # page_parsing.py
 1. Get the links of items in a channel
