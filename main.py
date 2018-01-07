@@ -1,4 +1,4 @@
-from multiprocessing import Pool
+#from multiprocessing import Pool
 import channel_extract
 import page_parsing
 
@@ -11,8 +11,6 @@ def get_all_links_from(channel):
         page_parsing.get_links_from(channel,num)
 
     # remove the overlap links
-    #     sort_links_list = list(set(page_parsing.links_list))
-    #     sort_links_list.sort(key=page_parsing.links_list.index)
         sort_links_list = list(set(page_parsing.links_list))
         all_links.append(sort_links_list)
 
@@ -30,7 +28,7 @@ def get_all_items_info():
             page_parsing.get_item_info(b)
 
 
-#
+
 get_all_items_info()
 
 # if __name__ == '__main__':
