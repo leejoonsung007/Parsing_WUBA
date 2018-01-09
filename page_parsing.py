@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import time
 import pymongo
+import re
 
 # app.mongo = MongoClient(host='0.0.0.0',port=27017,connect=False)
 client = pymongo.MongoClient('localhost',27017,connect = False)
@@ -90,9 +91,10 @@ def get_item_info(url):
                 zhuanzhuan_price = soup.select('span.price_now > i')[0].text
                 zhuanzhuan_area = soup.select('div.palce_li > span > i')[0].text.split('-') if soup.find_all('div', 'palce_li') else None
                 zhuanzhuan_cate = soup.select('.breadCrumb > span')[-1].text
+                zhuanzhuan_cate_handling = re.sub("\s","",zhuanzhuan_cate)
                 item_info.insert_one({'title':zhuanzhuan_title,'price':zhuanzhuan_price,'area':zhuanzhuan_area,
-                                      'publish_time':None,'cate':zhuanzhuan_cate})
-                print({'title': zhuanzhuan_title, 'price': zhuanzhuan_price, 'area': zhuanzhuan_area,'cate':zhuanzhuan_cate, 'publish_time':None})
+                                      'publish_time':None,'cate':zhuanzhuan_cate_handling})
+                print({'title': zhuanzhuan_title, 'price': zhuanzhuan_price, 'area': zhuanzhuan_area,'cate':zhuanzhuan_cate_handling, 'publish_time':None})
 
         check = soup.select('span')
         for z in range(0, len(check)):
@@ -102,8 +104,9 @@ def get_item_info(url):
                 area = list(soup.select('.c_25d a')[0].stripped_strings) if soup.find_all('span', 'c_25d') else None
                 publish_time= soup.select('li.time')[0].text
                 cate = soup.select('.breadCrumb > span')[-1].text
-                item_info.insert_one({'title':title,'price':price,'area':area,'publish_time':publish_time, 'cate':cate})
-                print({'title':title,'price':price,'area':area,'cate':cate,'publish_time':publish_time})
+                cate_handling = re.sub("\s","",cate)
+                item_info.insert_one({'title':title,'price':price,'area':area,'publish_time':publish_time, 'cate':cate_handling})
+                print({'title':title,'price':price,'area':area,'cate':cate_handling,'publish_time':publish_time})
 
     except:
         print("**************广告***************")
