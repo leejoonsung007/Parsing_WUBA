@@ -19,3 +19,4 @@ Call channel_extract and page_parsing
 # counts.py
 Counting the number of item_list and item_info in DB
 
+
